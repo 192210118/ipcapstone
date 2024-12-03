@@ -4,6 +4,30 @@ if(document.readyState == 'loading'){
     ready()
 }
 
+// store.js
+
+// Function to add item to cart
+function addToCart(productId, quantity) {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  // Check if product already in cart
+  let existingProduct = cart.find(item => item.productId === productId);
+
+  if (existingProduct) {
+    existingProduct.quantity += quantity; // Update quantity if product exists
+  } else {
+    cart.push({ productId, quantity }); // Add new product
+  }
+
+  // Save the updated cart to localStorage
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+  alert('Item added to cart');
+}
+
+// Example usage
+// addToCart('arharDal', 1);  // Add 1 Arhar Dal to cart
+
 function ready(){
     console.log("hello")
     var removeCartItemButtons = document.getElementsByClassName('btn-danger')
