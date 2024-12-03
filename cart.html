@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart - The Great Indian Farms</title>
+  <link rel="icon" href="images/icon.png" type="image/x-icon">
+  <link
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+  <link rel="stylesheet" href="./style.css" type="text/css" />
+</head>
+<body>
+  <div class="header">
+    <div class="container">
+      <div class="navbar">
+        <!-----------------------Navigation Bar------------------------>
+        <nav>
+          <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="https://enam.gov.in/web/all_news_desc">News</a></li>
+            <li><a href="/signup.html">Register</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Your Cart</h2>
+    <div class="cart-items"></div> <!-- Items will be dynamically inserted here -->
+    <div class="cart-total">
+      <span class="cart-total-label">Total:</span>
+      <span class="cart-total-price">Rs. 0</span>
+    </div>
+    <button class="btn btn-primary btn-purchase">Purchase</button>
+  </div>
+
+  <script src="store.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCart();
+    });
+
+    // Function to load cart from localStorage and render it
+    function loadCart() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let cartContainer = document.querySelector('.cart-items');
+      cartContainer.innerHTML = ''; // Clear any existing items
+      let total = 0;
+
+      cart.forEach(item => {
+        let cartRow = document.createElement('div');
+        cartRow.classList.add('cart-row');
+        
+        let productTitle = item.productId; // Assuming productId is the title for simplicity
+        let productPrice = 'Rs. ' + (item.quantity * 100); // Example price calculation
+        let productImage = 'images/arharDal.jpg'; // Add your image path
+
+        let cartRowContents = `
+          <div class="cart-item cart-column">
+            <img class="cart-item-image" src="${productImage}" width="100" height="100">
+            <span class="cart-item-title">${productTitle}</span>
+          </div>
+          <span class="cart-price cart-column">${productPrice}</span>
+          <div class="cart-quantity cart-column">
+            <input class="cart-quantity-input" type="number" value="${item.quantity}">
+            <button class="btn btn-danger" type="button">REMOVE</button>
+          </div>
+        `;
+        
+        cartRow.innerHTML = cartRowContents;
+        cartContainer.appendChild(cartRow);
+
+        // Calculate total
+        total += item.quantity * 100; // Add your price calculation logic here
+      });
+
+      // Update total price
+      document.querySelector('.cart-total-price').innerText = 'Rs. ' + total;
+      
+      // Add event listeners to remove buttons and quantity inputs
+      var removeCartItemButtons = document.getElementsByClassName('btn-danger');
+      for (var i = 0; i < removeCartItemButtons.length; i++) {
+        removeCartItemButtons[i].addEventListener('click', removeCartItem);
+      }
+
+      var quantityInputs = document.getElementsByClassName('cart-quantity-input');
+      for (var i = 0; i < quantityInputs.length; i++) {
+        quantityInputs[i].addEventListener('change', quantityChanged);
+      }
+    }
+
+    // Function to handle cart item removal
+    function removeCartItem(event) {
+      var buttonClicked = event.target;
+      var cartRow = buttonClicked.parentElement.parentElement;
+      cartRow.remove();
+
+      // Remove item from localStorage
+      let productTitle = cartRow.getElementsByClassName('cart-item-title')[0].innerText;
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart = cart.filter(item => item.productId !== productTitle);
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      updateCartTotal();
+    }
+
+    // Function to handle quantity changes
+    function quantityChanged(event) {
+      var input = event.target;
+      if (isNaN(input.value) || input.value <= 0) {
+        input.value = 1;
+      }
+
+      // Update quantity in localStorage
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let productTitle = input.parentElement.parentElement.getElementsByClassName('cart-item-title')[0].innerText;
+      cart.forEach(item => {
+        if (item.productId === productTitle) {
+          item.quantity = parseInt(input.value);
+        }
+      });
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      updateCartTotal();
+    }
+
+    // Function to update the total cart price
+    function updateCartTotal() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let total = 0;
+      cart.forEach(item => {
+        total += item.quantity * 100; // Example price calculation
+      });
+
+      document.querySelector('.cart-total-price').innerText = 'Rs. ' + total;
+    }
+
+    // Function to handle purchase click
+    document.querySelector('.btn-purchase').addEventListener('click', function() {
+      alert('Thank you for your purchase!');
+      
+      // Clear the cart after purchase
+      localStorage.removeItem('cart');
+      loadCart();
+    });
+  </script>
+</body>
+</html>
