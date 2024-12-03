@@ -41,6 +41,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-6">
+          <!-- Remove action attribute and method -->
           <form id="loginForm">
             <div class="register-form">
               <div class="row">
@@ -76,13 +77,17 @@
   </div>
 
   <script>
+    // Listen for form submission
     document.getElementById('loginForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Prevent the form from submitting to the server
+      event.preventDefault(); // Prevent form from submitting to the server
 
-      // Since we want any username and password to log in, we just proceed to the next step
-      localStorage.setItem('loggedIn', 'true'); // Set a flag to indicate the user is logged in
+      // Here we assume login is always successful
+      // In a real-world scenario, you'd verify the username and password
 
-      // Redirect the user to index.html after login
+      // You can add any logic to store user session info, if required
+      localStorage.setItem('loggedIn', 'true'); // Mark the user as logged in
+
+      // Redirect the user to the home page (index.html)
       window.location.href = 'index.html';
     });
   </script>
