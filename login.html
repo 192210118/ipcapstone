@@ -79,20 +79,11 @@
     document.getElementById('loginForm').addEventListener('submit', function(event) {
       event.preventDefault(); // Prevent the form from submitting to the server
 
-      // Get user inputs
-      var username = document.getElementById('username').value;
-      var password = document.getElementById('password').value;
+      // Since we want any username and password to log in, we just proceed to the next step
+      localStorage.setItem('loggedIn', 'true'); // Set a flag to indicate the user is logged in
 
-      // For now, assume any username and password is valid (you can replace this with actual validation)
-      if (username && password) {
-        // Set 'loggedIn' status to true in localStorage
-        localStorage.setItem('loggedIn', 'true');
-
-        // Redirect to index.html after successful login
-        window.location.href = 'index.html';
-      } else {
-        alert('Please enter both username and password');
-      }
+      // Redirect the user to index.html after login
+      window.location.href = 'index.html';
     });
   </script>
 </body>
